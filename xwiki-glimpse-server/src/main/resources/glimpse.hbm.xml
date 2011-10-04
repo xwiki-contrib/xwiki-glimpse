@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.xwiki.contrib.glimpse.model.Agent" table="glimpse_agents">
+    <id name="ip" type="string">
+      <column name="agent_ip" length="255" not-null="true" />
+    </id>
+    <property name="name" type="string" column="agent_name" length="255" not-null="true" />
+    <property name="lastUpdateTime" type="long" column="agent_last_update_time" not-null="true" />
+    <set name="services" cascade="all">
+      <key column="agent_ip" />
+      <one-to-many class="org.xwiki.contrib.glimpse.model.Service" />
+    </set>
+  </class>
+
+  <class name="org.xwiki.contrib.glimpse.model.Service" table="glimpse_services">
+    <id name="id" type="string">
+      <generator class="assigned" />
+    </id>    
+    <many-to-one name="agent" class="org.xwiki.contrib.glimpse.model.Agent" column="agent_ip" />
+    <property name="name" length="255" column="service_name" not-null="true" />    
+    <property name="status" type="int" column="service_status" length="255" not-null="true" />
+    <map name="data" cascade="all">
+      <key column="id" />
+      <index column="key" type="string" />
+      <element column="value" type="string" />
+    </map>    
+  </class>
+</hibernate-mapping>

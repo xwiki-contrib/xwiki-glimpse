@@ -1,0 +1,6 @@
+.classpath
+.project
+.settings
+*/src/java/META-INF
+target
+xwiki-debug-eclipse
