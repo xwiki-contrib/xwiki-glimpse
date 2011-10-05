@@ -33,6 +33,17 @@ public class Agent
         return services;
     }
 
+    public Service getService(String name)
+    {
+        for (Service service : services) {
+            if (service.getName().equals(name)) {
+                return service;
+            }
+        }
+
+        return null;
+    }
+
     public void setIp(String ip)
     {
         this.ip = ip;

@@ -36,6 +36,10 @@ public class Service
     {
         return data;
     }
+    
+    public String getData(String key) {
+        return data.get(key);
+    }
 
     public String getId()
     {
