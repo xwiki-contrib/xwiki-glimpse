@@ -23,116 +23,60 @@ import net.sf.json.JSONSerializer;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.PropertyFilter;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.context.Execution;
+import org.xwiki.contrib.glimpse.Glimpse;
+import org.xwiki.contrib.glimpse.GlimpseException;
+import org.xwiki.contrib.glimpse.GlimpseUtils;
 import org.xwiki.contrib.glimpse.model.Agent;
 import org.xwiki.contrib.glimpse.model.Service;
 import org.xwiki.rest.XWikiRestComponent;
 
-import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.XWikiException;
-import com.xpn.xwiki.store.XWikiHibernateStore;
-
-@Component("org.xwiki.contrib.glimpse.AgentsResource")
+@Component("org.xwiki.contrib.glimpse.resources.AgentsResource")
 @Path("/glimpse/agents")
 public class AgentsResource implements XWikiRestComponent
 {
     @Inject
-    Execution execution;
+    private Glimpse glimpse;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get()
     {
-        XWikiContext xwikiContext = (XWikiContext) execution.getContext().getProperty("xwikicontext");
-        XWikiHibernateStore hibernateStore = xwikiContext.getWiki().getHibernateStore();
+        List<Agent> agents = glimpse.getAgents();
 
-        try {
-            hibernateStore.beginTransaction(xwikiContext);
-            Session session = hibernateStore.getSession(xwikiContext);
-            Query query = session.createQuery("select agent from Agent as agent");
-
-            List results = query.list();
-
-            JsonConfig config = new JsonConfig();
-            config.setJsonPropertyFilter(new PropertyFilter()
+        JsonConfig config = new JsonConfig();
+        config.setJsonPropertyFilter(new PropertyFilter()
+        {
+            public boolean apply(Object source, String name, Object value)
             {
-                public boolean apply(Object source, String name, Object value)
-                {
-                    /* Filter agent and id fields in Service class in order to avoid a cyclic object graph */
-                    if (source.getClass().equals(Service.class) && ("agent".equals(name) || "id".equals(name))) {
-                        return true;
-                    }
-                    return false;
+                /* Filter agent and id fields in Service class in order to avoid a cyclic object graph */
+                if (source.getClass().equals(Service.class) && ("agent".equals(name) || "id".equals(name))) {
+                    return true;
                 }
-            });
+                return false;
+            }
+        });
 
-            JSON json = JSONSerializer.toJSON(results, config);
+        JSON json = JSONSerializer.toJSON(agents, config);
 
-            hibernateStore.endTransaction(xwikiContext, false);
-
-            return Response.ok(json.toString()).build();
-        } catch (XWikiException e) {
-            hibernateStore.endTransaction(xwikiContext, false);
-            return Response.serverError().build();
-        }
+        return Response.ok(json.toString()).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(String jsonData)
     {
-        XWikiContext xwikiContext = (XWikiContext) execution.getContext().getProperty("xwikicontext");
-        XWikiHibernateStore hibernateStore = xwikiContext.getWiki().getHibernateStore();
-
         try {
-            Agent agent = readAgentFromJSON(jsonData);
+            Agent agent = GlimpseUtils.readAgentFromJSON(jsonData);
 
-            hibernateStore.beginTransaction(xwikiContext);
-            Session session = hibernateStore.getSession(xwikiContext);
-            session.saveOrUpdate(agent);
-            hibernateStore.endTransaction(xwikiContext, true);
+            glimpse.storeAgent(agent);
 
             return Response.ok().entity(agent.toString()).build();
         } catch (JSONException e) {
             return Response.status(Status.BAD_REQUEST).build();
-        } catch (XWikiException e) {
-            hibernateStore.endTransaction(xwikiContext, false);
+        } catch (GlimpseException e) {
             return Response.serverError().build();
         }
-    }
-
-    private Agent readAgentFromJSON(String jsonData)
-    {
-        JSONObject jsonAgentObject = JSONObject.fromObject(jsonData);
-        Agent agent = new Agent();
-        agent.setIp(jsonAgentObject.getString("ip"));
-        agent.setName(jsonAgentObject.getString("name"));
-        agent.setLastUpdateTime(System.currentTimeMillis());
-
-        Set<Service> services = new HashSet<Service>();
-        JSONArray jsonServices = jsonAgentObject.getJSONArray("services");
-        Iterator iterator = jsonServices.iterator();
-        while (iterator.hasNext()) {
-            JSONObject jsonService = (JSONObject) iterator.next();
-            Service service = new Service(agent, jsonService.getString("name"));
-            service.setStatus(jsonService.getInt("status"));
-
-            JSONObject jsonServiceData = jsonService.getJSONObject("data");
-            if (jsonServiceData != null) {
-                for (Object key : jsonServiceData.keySet()) {
-                    service.getData().put((String) key, jsonServiceData.getString((String) key));
-                }
-            }
-
-            services.add(service);
-        }
-
-        agent.setServices(services);
-
-        return agent;
     }
 
 }

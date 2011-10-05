@@ -1,1 +1,3 @@
 org.xwiki.contrib.glimpse.resources.AgentsResource
+org.xwiki.contrib.glimpse.internal.GlimpseImpl
+org.xwiki.contrib.glimpse.internal.GlimpseScriptService
