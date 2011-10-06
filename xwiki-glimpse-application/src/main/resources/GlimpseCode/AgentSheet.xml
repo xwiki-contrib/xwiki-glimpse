@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>GlimpseCode</web>
+<name>AgentSheet</name>
+<language></language>
+<defaultLanguage>en</defaultLanguage>
+<translation>0</translation>
+<parent>GlimpseCode.AgentClass</parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1317845603000</creationDate>
+<date>1317934775000</date>
+<contentUpdateDate>1317934775000</contentUpdateDate>
+<version>3.6</version>
+<title>AgentClass Sheet</title>
+<template></template>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>true</minorEdit>
+<syntaxId>xwiki/2.0</syntaxId>
+<hidden>false</hidden>
+<content>{{velocity}}
+#set($agent = $doc.getObject("GlimpseCode.AgentClass"))
+#if($agent)
+  
+#####################################################################################################
+## SUMMARY
+#####################################################################################################
+
+#set($query = "select obj.key, obj.value from Document doc, doc.object(GlimpseCode.ServicePropertyClass) as obj, doc.object(GlimpseCode.ServiceClass) as service where service.agent_ip = '$agent.ip' AND service.name = 'info' AND service.id = obj.serviceId")
+#set($entries = $services.query.xwql($query).execute())
+
+|= Name |= **$agent.getProperty("name").getValue()**
+|= IP Address |= **$agent.getProperty("ip").getValue()**
+|= Last update time |= **$datetool.toDate($agent.getProperty("lastUpdateTime").getValue())**
+#if(!$listtool.isEmpty($entries)) 
+  #foreach($entry in $entries)
+    #set($key = $entry[0])
+    #set($value = $entry[1])
+|**$key**##
+|$value
+  #end 
+#end
+
+#####################################################################################################
+## GLIMPSES
+#####################################################################################################
+----
+#set($glimpses = $xwiki.search("select doc.fullName from XWikiDocument doc where doc.name like 'GlimpseOn%'")) ##
+#foreach($glimpse in $glimpses) ##
+  #set($glimpseDocument = $xwiki.getDocument($glimpse)) ##
+  #set($glimpseClass = $glimpseDocument.xWikiClass) ##
+  #set($glimpseObject = $doc.getObject($glimpseClass.name)) ##
+  ##
+= Glimpse on **$glimpseDocument.title**
+
+  #foreach($property in $glimpseClass.properties)
+    |= $property.prettyName ##
+  #end ##
+
+  #foreach($property in $glimpseClass.properties)
+    | $glimpseObject.getProperty($property.name).value ##
+  #end ##
+
+#end
+
+#####################################################################################################
+## DETAILS FOR EACH SERVICE
+#####################################################################################################
+----
+#set($query = "select obj.id, obj.name, obj.status from Document doc, doc.object(GlimpseCode.ServiceClass) as obj where obj.agent_ip = '$agent.ip'")
+#set($agentServices = $services.query.xwql($query).execute())
+
+#foreach($service in $agentServices)
+  #set($serviceId = $service[0])
+  #set($serviceName = $service[1])
+  #if("$serviceName" != "info")
+= Service **$serviceName** details
+
+|= Key |= Value
+    #set($query = "select obj.key, obj.value from Document doc, doc.object(GlimpseCode.ServicePropertyClass) as obj where obj.serviceId = '$serviceId'")
+    #set($entries = $services.query.xwql($query).execute())
+    #foreach($entry in $entries)
+      #set($key = $entry[0])
+      #set($value = $entry[1])
+|**$key**##
+|$value
+    #end
+  #end
+
+#end
+
+
+
+#end ##
+</content></xwikidoc>

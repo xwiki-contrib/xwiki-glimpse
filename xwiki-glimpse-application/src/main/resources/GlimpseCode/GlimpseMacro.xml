@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>GlimpseCode</web>
+<name>GlimpseMacro</name>
+<language></language>
+<defaultLanguage>en</defaultLanguage>
+<translation>0</translation>
+<parent>GlimpseCode.WebHome</parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1317898736000</creationDate>
+<date>1317936653000</date>
+<contentUpdateDate>1317936653000</contentUpdateDate>
+<version>6.1</version>
+<title>GlimpseMacro</title>
+<template></template>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.0</syntaxId>
+<hidden>false</hidden>
+<object>
+<class>
+<name>XWiki.WikiMacroClass</name>
+<customClass></customClass>
+<customMapping></customMapping>
+<defaultViewSheet></defaultViewSheet>
+<defaultEditSheet></defaultEditSheet>
+<defaultWeb></defaultWeb>
+<nameField></nameField>
+<validationScript></validationScript>
+<code>
+<disabled>0</disabled>
+<name>code</name>
+<number>9</number>
+<prettyName>Macro code</prettyName>
+<rows>20</rows>
+<size>40</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</code>
+<contentDescription>
+<disabled>0</disabled>
+<name>contentDescription</name>
+<number>8</number>
+<prettyName>Content description (Not applicable for "No content" type)</prettyName>
+<rows>5</rows>
+<size>40</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</contentDescription>
+<contentType>
+<cache>0</cache>
+<disabled>0</disabled>
+<displayType>select</displayType>
+<multiSelect>0</multiSelect>
+<name>contentType</name>
+<number>7</number>
+<prettyName>Macro content type</prettyName>
+<relationalStorage>0</relationalStorage>
+<separator>|</separator>
+<separators>|</separators>
+<size>1</size>
+<unmodifiable>0</unmodifiable>
+<values>Optional|Mandatory|No content</values>
+<classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+</contentType>
+<defaultCategory>
+<disabled>0</disabled>
+<name>defaultCategory</name>
+<number>4</number>
+<prettyName>Default category</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</defaultCategory>
+<description>
+<disabled>0</disabled>
+<name>description</name>
+<number>3</number>
+<prettyName>Macro description</prettyName>
+<rows>5</rows>
+<size>40</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</description>
+<id>
+<disabled>0</disabled>
+<name>id</name>
+<number>1</number>
+<prettyName>Macro id</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</id>
+<name>
+<disabled>0</disabled>
+<name>name</name>
+<number>2</number>
+<prettyName>Macro name</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</name>
+<supportsInlineMode>
+<disabled>0</disabled>
+<displayFormType>select</displayFormType>
+<displayType>yesno</displayType>
+<name>supportsInlineMode</name>
+<number>5</number>
+<prettyName>Supports inline mode</prettyName>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+</supportsInlineMode>
+<visibility>
+<cache>0</cache>
+<disabled>0</disabled>
+<displayType>select</displayType>
+<multiSelect>0</multiSelect>
+<name>visibility</name>
+<number>6</number>
+<prettyName>Macro visibility</prettyName>
+<relationalStorage>0</relationalStorage>
+<separator>|</separator>
+<separators>|</separators>
+<size>1</size>
+<unmodifiable>0</unmodifiable>
+<values>Current User|Current Wiki|Global</values>
+<classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+</visibility>
+</class>
+<name>GlimpseCode.GlimpseMacro</name>
+<number>0</number>
+<className>XWiki.WikiMacroClass</className>
+<guid>c50fd422-d789-4ea6-bf83-e9070ef4a794</guid>
+<property>
+<code>{{velocity}}
+## This hack has been taken from the livetable macro. It's used to set the pretty names as the header of the livetable
+#set($msg2 = $msg) ##
+#set($msg = {}) ##
+## need to get the pagination and livetable translations
+#foreach($key in ["results", "resultsmacros","_actions.delete","_actions.rename","_actions.rights", "_actions.copy","filters.title","loading","tags.help","tags.help.cancel","environmentCannotLoadTableMessage", "pagesize.label", "tools", "tools.excel"]) ##
+#set($ok = $msg.put("xe.livetable.${key}", $msg2.get("xe.livetable.${key}"))) ##
+#end ##
+#foreach($key in ["page","page.title","page.previous","page.prev.title","page.next","page.next.title","results.none","results.one","results.single","results.many"]) ##
+#set($ok = $msg.put("xe.pagination.${key}", $msg2.get("xe.pagination.${key}"))) ##
+#end ##
+##
+#if($context.macro.params.document) ##
+  #set($glimpseDocument = $xwiki.getDocument($context.macro.params.document)) ##
+#else ##
+  #set($glimpseDocument = $doc) ##
+#end ##
+##
+#set($glimpseClass = $glimpseDocument.getxWikiClass()) ##
+##
+#set($columns = $glimpseClass.propertyNames) ##
+#set($columnProperties = {}) ##
+#foreach($column in $glimpseClass.getProperties()) ##
+  #set($ok = $msg.put("glimpse.${column.name}", $column.prettyName)) ##
+  #set($ok = $columnProperties.put($column.name, { "type" : "text", "link" : "view", "size" : 20, "filterable" : true, "sortable": true  })) ##
+#end ##
+##
+#set($options = { 
+"className": $glimpseClass.name,   
+"translationPrefix" : "glimpse.",  
+"tagCloud" : true,  
+"rowCount": 15,  
+"maxPages" : 10, 
+"selectedColumn" : "doc.title", 
+"defaultOrder" : "asc" 
+}) ##
+##
+= Glimpse on $glimpseDocument.title
+#livetable("glimpse" $columns $columnProperties $options)
+#set($msg = $msg2)
+{{/velocity}}</code>
+</property>
+<property>
+<contentDescription></contentDescription>
+</property>
+<property>
+<contentType>No content</contentType>
+</property>
+<property>
+<defaultCategory></defaultCategory>
+</property>
+<property>
+<description></description>
+</property>
+<property>
+<id>glimpse</id>
+</property>
+<property>
+<name></name>
+</property>
+<property>
+<supportsInlineMode></supportsInlineMode>
+</property>
+<property>
+<visibility>Current Wiki</visibility>
+</property>
+</object>
+<object>
+<class>
+<name>XWiki.WikiMacroParameterClass</name>
+<customClass></customClass>
+<customMapping></customMapping>
+<defaultViewSheet></defaultViewSheet>
+<defaultEditSheet></defaultEditSheet>
+<defaultWeb></defaultWeb>
+<nameField></nameField>
+<validationScript></validationScript>
+<defaultValue>
+<disabled>0</disabled>
+<name>defaultValue</name>
+<number>4</number>
+<prettyName>Parameter default value</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</defaultValue>
+<description>
+<disabled>0</disabled>
+<name>description</name>
+<number>2</number>
+<prettyName>Parameter description</prettyName>
+<rows>5</rows>
+<size>40</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</description>
+<mandatory>
+<disabled>0</disabled>
+<displayFormType>select</displayFormType>
+<displayType>yesno</displayType>
+<name>mandatory</name>
+<number>3</number>
+<prettyName>Parameter mandatory</prettyName>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+</mandatory>
+<name>
+<disabled>0</disabled>
+<name>name</name>
+<number>1</number>
+<prettyName>Parameter name</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</name>
+</class>
+<name>GlimpseCode.GlimpseMacro</name>
+<number>0</number>
+<className>XWiki.WikiMacroParameterClass</className>
+<guid>25711527-f0a4-49e0-8f32-82f39a700227</guid>
+<property>
+<defaultValue></defaultValue>
+</property>
+<property>
+<description></description>
+</property>
+<property>
+<mandatory>0</mandatory>
+</property>
+<property>
+<name>document</name>
+</property>
+</object>
+<content>The {{code}}{{glimpse/}}{{/code}} macro is used to display agent data using a livetable.
+
+No argument are given, then the class associated to the page is used as the glimpse definition (if it matches the convention)
+
+A document argument can be used to explicitly say which page contains the glimpse defintion to be used.</content></xwikidoc>

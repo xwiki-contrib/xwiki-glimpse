@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>GlimpseCode</web>
+<name>ServicePropertyClass</name>
+<language></language>
+<defaultLanguage>en</defaultLanguage>
+<translation>0</translation>
+<parent>XWiki.XWikiClasses</parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1317847931000</creationDate>
+<date>1317918162000</date>
+<contentUpdateDate>1317918162000</contentUpdateDate>
+<version>1.1</version>
+<title></title>
+<template></template>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment>Imported from XAR</comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.0</syntaxId>
+<hidden>false</hidden>
+<class>
+<name>GlimpseCode.ServicePropertyClass</name>
+<customClass></customClass>
+<customMapping></customMapping>
+<defaultViewSheet></defaultViewSheet>
+<defaultEditSheet></defaultEditSheet>
+<defaultWeb></defaultWeb>
+<nameField></nameField>
+<validationScript></validationScript>
+<id>
+<customDisplay></customDisplay>
+<disabled>0</disabled>
+<name>id</name>
+<number>1</number>
+<picker>0</picker>
+<prettyName>id</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<validationMessage></validationMessage>
+<validationRegExp></validationRegExp>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</id>
+<key>
+<customDisplay></customDisplay>
+<disabled>0</disabled>
+<name>key</name>
+<number>3</number>
+<picker>0</picker>
+<prettyName>key</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<validationMessage></validationMessage>
+<validationRegExp></validationRegExp>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</key>
+<serviceId>
+<customDisplay></customDisplay>
+<disabled>0</disabled>
+<name>serviceId</name>
+<number>2</number>
+<picker>0</picker>
+<prettyName>serviceId</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<validationMessage></validationMessage>
+<validationRegExp></validationRegExp>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</serviceId>
+<value>
+<customDisplay></customDisplay>
+<disabled>0</disabled>
+<name>value</name>
+<number>4</number>
+<picker>0</picker>
+<prettyName>value</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<validationMessage></validationMessage>
+<validationRegExp></validationRegExp>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</value>
+</class>
+<content>{{velocity}}
+## Replace Main with the Space where you want your documents to be created.
+## Replace the default parent with the one of your choice and save the document.
+##
+#set($className = $doc.name.substring(0, $doc.name.indexOf("Class")))
+#set($defaultParent = "${doc.space}.${className}Class")
+#set($defaultSpace = 'Main')
+{{/velocity}}
+
+{{include document="XWiki.ClassSheet"/}}</content></xwikidoc>

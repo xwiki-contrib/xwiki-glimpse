@@ -16,5 +16,6 @@
 
   <modules>
     <module>xwiki-glimpse-server</module>
+    <module>xwiki-glimpse-application</module>
   </modules>
 </project>
