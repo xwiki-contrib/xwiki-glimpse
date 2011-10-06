@@ -13,7 +13,7 @@ public class Service
 
     private int status;
 
-    private Map<String, String> data = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<String, String>();
 
     private Service()
     {
@@ -32,13 +32,14 @@ public class Service
         return agent;
     }
 
-    public Map<String, String> getData()
+    public Map<String, String> getProperties()
     {
-        return data;
+        return properties;
     }
-    
-    public String getData(String key) {
-        return data.get(key);
+
+    public String getProperty(String key)
+    {
+        return properties.get(key);
     }
 
     public String getId()
@@ -61,9 +62,9 @@ public class Service
         this.agent = agent;
     }
 
-    public void setData(Map<String, String> data)
+    public void setProperties(Map<String, String> properties)
     {
-        this.data = data;
+        this.properties = properties;
     }
 
     public void setId(String id)
@@ -85,7 +86,7 @@ public class Service
     public String toString()
     {
         return String.format("Service [id=%s, agent=%s, name=%s, status=%s, data=%s]", id, agent.getIp(), name, status,
-            data);
+            properties);
     }
 
     @Override

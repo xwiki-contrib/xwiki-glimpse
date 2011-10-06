@@ -28,10 +28,10 @@ public class GlimpseUtils
             Service service = new Service(agent, jsonService.getString("name"));
             service.setStatus(jsonService.getInt("status"));
 
-            JSONObject jsonServiceData = jsonService.getJSONObject("data");
-            if (jsonServiceData != null) {
-                for (Object key : jsonServiceData.keySet()) {
-                    service.getData().put((String) key, jsonServiceData.getString((String) key));
+            JSONObject jsonServiceProperties = jsonService.getJSONObject("properties");
+            if (jsonServiceProperties != null) {
+                for (Object key : jsonServiceProperties.keySet()) {
+                    service.getProperties().put((String) key, jsonServiceProperties.getString((String) key));
                 }
             }
 

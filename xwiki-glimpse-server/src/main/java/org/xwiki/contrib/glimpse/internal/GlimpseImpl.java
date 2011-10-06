@@ -87,9 +87,9 @@ public class GlimpseImpl implements Glimpse
             service.setId(currentService.getId());
             service.setStatus(currentService.getStatus());
 
-            Map<String, String> data = currentService.getData();
+            Map<String, String> data = currentService.getProperties();
             for (String key : data.keySet()) {
-                service.getData().put(key, data.get(key));
+                service.getProperties().put(key, data.get(key));
             }
 
             copy.getServices().add(service);
