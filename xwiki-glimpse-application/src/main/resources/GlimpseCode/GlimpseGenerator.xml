@@ -11,9 +11,9 @@
 <customClass></customClass>
 <contentAuthor>XWiki.Admin</contentAuthor>
 <creationDate>1317893037000</creationDate>
-<date>1317936387000</date>
-<contentUpdateDate>1317936387000</contentUpdateDate>
-<version>12.1</version>
+<date>1317978724000</date>
+<contentUpdateDate>1317978724000</contentUpdateDate>
+<version>13.1</version>
 <title>GlimpseGenerator</title>
 <template></template>
 <defaultTemplate></defaultTemplate>
@@ -49,7 +49,7 @@
   #foreach($property in $properties)    
     #set($components = $property.split(":", 2))
     #set($propertyId = "service_${components[0]}_${components[1]}")
-    #set($ok = $glimpseClass.addTextField($propertyId.replace(" ", "_"), "$components[0] $components[1]", 512))
+    #set($ok = $glimpseClass.addTextField($propertyId.replace(" ", "_"), "$components[0] : $components[1]", 512))
   #end
   $glimpseDocument.setTitle($name)
   $glimpseDocument.setContent("{{glimpse/}}")

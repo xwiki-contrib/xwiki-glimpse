@@ -11,9 +11,9 @@
 <customClass></customClass>
 <contentAuthor>XWiki.Admin</contentAuthor>
 <creationDate>1317844754000</creationDate>
-<date>1317933704000</date>
-<contentUpdateDate>1317933704000</contentUpdateDate>
-<version>7.1</version>
+<date>1317978617000</date>
+<contentUpdateDate>1317978617000</contentUpdateDate>
+<version>11.1</version>
 <title>UpdateAgentData</title>
 <template></template>
 <defaultTemplate></defaultTemplate>
@@ -101,7 +101,13 @@ for(agent in agents) {
           components = glimpseProperty.split("_", 3)
           if(components.length == 3) {
             //The replace on components[2] is done because when we generate the glimpse we replace spaces with _ to avoid invalid names
-            glimpseObject.set(glimpseProperty, agent.getService(components[1])?.getProperty(components[2].replace("_", " ")) ?: "Unknown")
+            service = agent.getService(components[1])
+            if(service != null) {
+              glimpseObject.set(glimpseProperty, agent.getService(components[1]).getProperty(components[2].replace("_", " ")) ?: "${components[2]} not reported".toString())
+            }
+            else {
+              glimpseObject.set(glimpseProperty, "No service '${components[1]}'".toString())
+            }
           }
         }     
       }
