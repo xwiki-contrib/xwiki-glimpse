@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>xwiki-glimpse-application</artifactId>
+  <packaging>xar</packaging>
 
   <name>XWiki Glimpse - Application</name>
   <description>XWiki application for Glimpse</description>
