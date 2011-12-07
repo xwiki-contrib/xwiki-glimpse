@@ -4,3 +4,4 @@
 target
 xwiki-debug-eclipse
 *.pyc
+*~
