@@ -19,11 +19,11 @@
       <generator class="assigned" />
     </id>    
     <many-to-one name="agent" class="org.xwiki.contrib.glimpse.model.Agent" column="agent_ip" />
-    <property name="name" length="255" column="service_name" not-null="true" />    
+    <property name="name" type="string" column="service_name" length="255" not-null="true" />
     <property name="status" type="int" column="service_status" length="255" not-null="true" />
     <map name="properties" cascade="all">
       <key column="id" />
-      <index column="key" type="string" />
+      <index column="property_name" type="string" />
       <element column="value" type="string" />
     </map>    
   </class>
