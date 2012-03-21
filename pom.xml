@@ -12,6 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- XWiki version to be used for XAR handlers and REST API -->
+    <xwiki.version>3.3</xwiki.version>
   </properties>
 
   <modules>

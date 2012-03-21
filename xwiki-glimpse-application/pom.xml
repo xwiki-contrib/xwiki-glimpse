@@ -23,7 +23,7 @@
       <extension>
         <groupId>org.xwiki.commons</groupId>
         <artifactId>xwiki-commons-tool-xar-handlers</artifactId>
-        <version>3.2-SNAPSHOT</version>
+        <version>${xwiki.version}</version>
       </extension>
     </extensions>
   </build>
