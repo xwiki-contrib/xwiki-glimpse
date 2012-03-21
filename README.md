@@ -12,7 +12,7 @@ Installation
 
 * Copy the xwiki-glimpse-server jar into the WEB-INF/lib directory of your XWiki deployment (it will be generated under `xwiki-glimpse-application/target`)
 
-* Add a `&lt;mapping resource="glimpse.hbm.xml"/&gt;` entry in the `WEB-INF/hibernate.cfg.xml` file of your XWiki deployment
+* Add a `<mapping resource="glimpse.hbm.xml"/>` entry in the `WEB-INF/hibernate.cfg.xml` file of your XWiki deployment
 
 * Restart XWiki
 
