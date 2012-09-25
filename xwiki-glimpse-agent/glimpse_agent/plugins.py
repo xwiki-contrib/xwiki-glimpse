@@ -24,13 +24,13 @@ def execute_plugin(plugin_path):
         result = {}
         filename = os.path.basename(plugin_path).replace('plugin_', '')
         result['name'] = os.path.splitext(filename)[0]
+        result['status'] = status
 
         try:
             # Check if the output is in the JSON format and decode it
-            data = json.loads(data)
+            jsonData = json.loads(data)
 
-            result['status'] = status
-            result['properties'] = data
+            result['properties'] = jsonData
         except ValueError:
             result['properties'] = {}
             result['properties']['error'] = 'Plugin output not in JSON format'
