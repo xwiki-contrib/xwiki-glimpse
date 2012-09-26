@@ -25,12 +25,12 @@
 <content>{{velocity}}
 #set($agent = $doc.getObject("GlimpseCode.AgentClass"))
 #if($agent)
-  
+#set($agentName = $agent.getProperty("name").getValue())
 #####################################################################################################
 ## SUMMARY
 #####################################################################################################
 
-#set($query = "select obj.key, obj.value from Document doc, doc.object(GlimpseCode.ServicePropertyClass) as obj, doc.object(GlimpseCode.ServiceClass) as service where service.agent_ip = '$agent.ip' AND service.name = 'info' AND service.id = obj.serviceId")
+#set($query = "select obj.key, obj.value from Document doc, doc.object(GlimpseCode.ServicePropertyClass) as obj, doc.object(GlimpseCode.ServiceClass) as service where service.agent_name = '$agentName' AND service.name = 'info' AND service.id = obj.serviceId")
 #set($entries = $services.query.xwql($query).execute())
 
 |= Name |= **$agent.getProperty("name").getValue()**
@@ -71,7 +71,7 @@
 ## DETAILS FOR EACH SERVICE
 #####################################################################################################
 ----
-#set($query = "select obj.id, obj.name, obj.status from Document doc, doc.object(GlimpseCode.ServiceClass) as obj where obj.agent_ip = '$agent.ip'")
+#set($query = "select obj.id, obj.name, obj.status from Document doc, doc.object(GlimpseCode.ServiceClass) as obj where obj.agent_name = '$agentName'")
 #set($agentServices = $services.query.xwql($query).execute())
 
 #foreach($service in $agentServices)
