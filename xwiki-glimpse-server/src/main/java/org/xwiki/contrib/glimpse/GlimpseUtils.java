@@ -15,9 +15,7 @@ public class GlimpseUtils
     public static Agent readAgentFromJSON(String jsonData)
     {
         JSONObject jsonAgentObject = JSONObject.fromObject(jsonData);
-        Agent agent = new Agent();
-        agent.setIp(jsonAgentObject.getString("ip"));
-        agent.setName(jsonAgentObject.getString("name"));
+        Agent agent = new Agent(jsonAgentObject.getString("name"), jsonAgentObject.getString("ip"));
         agent.setLastUpdateTime(System.currentTimeMillis());
 
         Set<Service> services = new HashSet<Service>();

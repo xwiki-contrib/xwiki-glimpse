@@ -5,6 +5,8 @@ import java.util.Set;
 
 public class Agent
 {
+    private String id;
+
     private String ip;
 
     private String name;
@@ -12,6 +14,18 @@ public class Agent
     private long lastUpdateTime;
 
     private Set<Service> services = new HashSet<Service>();
+
+    public Agent()
+    {
+    }
+
+    public Agent(String name, String ip)
+    {
+        this.name = name;
+        this.ip = ip;
+
+        id = String.format("%s:%s", name, ip);
+    }
 
     public String getIp()
     {
@@ -62,6 +76,20 @@ public class Agent
     public void setServices(Set<Service> services)
     {
         this.services = services;
+    }
+
+    public String getId()
+    {
+        if (id == null) {
+            id = String.format("%s:%s", name, ip);
+        }
+
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
     }
 
     @Override

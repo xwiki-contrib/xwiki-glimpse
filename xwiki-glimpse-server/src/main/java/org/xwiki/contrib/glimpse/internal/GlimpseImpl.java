@@ -78,6 +78,7 @@ public class GlimpseImpl implements Glimpse
     private Agent copyAgent(Agent agent)
     {
         Agent copy = new Agent();
+        copy.setId(agent.getId());
         copy.setIp(agent.getIp());
         copy.setName(agent.getName());
         copy.setLastUpdateTime(agent.getLastUpdateTime());

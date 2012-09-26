@@ -3,26 +3,27 @@
   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
   <class name="org.xwiki.contrib.glimpse.model.Agent" table="glimpse_agents">
-    <id name="ip" type="string">
-      <column name="agent_ip" length="255" not-null="true" />
+    <id name="id" column="agent_id" type="string">
+      <generator class="assigned" />
     </id>
+    <property name="ip" type="string" column="agent_ip" length="255" not-null="true" />
     <property name="name" type="string" column="agent_name" length="255" not-null="true" />
     <property name="lastUpdateTime" type="long" column="agent_last_update_time" not-null="true" />
     <set name="services" cascade="all">
-      <key column="agent_ip" />
+      <key column="agent_id" />
       <one-to-many class="org.xwiki.contrib.glimpse.model.Service" />
     </set>
   </class>
 
   <class name="org.xwiki.contrib.glimpse.model.Service" table="glimpse_services">
-    <id name="id" type="string">
+    <id name="id" column="service_id" type="string">
       <generator class="assigned" />
     </id>    
-    <many-to-one name="agent" class="org.xwiki.contrib.glimpse.model.Agent" column="agent_ip" />
+    <many-to-one name="agent" class="org.xwiki.contrib.glimpse.model.Agent" column="agent_id" />
     <property name="name" type="string" column="service_name" length="255" not-null="true" />
     <property name="status" type="int" column="service_status" length="255" not-null="true" />
     <map name="properties" cascade="all">
-      <key column="id" />
+      <key column="service_id" />
       <index column="property_name" type="string" />
       <element column="value" type="string" />
     </map>    

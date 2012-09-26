@@ -24,7 +24,7 @@ public class Service
         this.agent = agent;
         this.name = name;
 
-        id = String.format("%s:%s", agent.getIp(), name);
+        id = String.format("%s:%s:%s", agent.getName(), agent.getIp(), name);
     }
 
     public Agent getAgent()
@@ -44,6 +44,10 @@ public class Service
 
     public String getId()
     {
+        if (id == null) {
+            id = String.format("%s:%s:%s", agent.getName(), agent.getIp(), name);
+        }
+
         return id;
     }
 
