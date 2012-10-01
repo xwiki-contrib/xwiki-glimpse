@@ -7,6 +7,7 @@ import glimpse_agent.plugins
 import logging
 import socket
 import time
+from daemon import runner
 
 _DEFAULT_CONFIGURATION = {
                           'server' : '127.0.0.1:8080',
@@ -20,6 +21,11 @@ class AgentThread(Thread):
         self.server = configuration.get('agent', 'server')
         self.update_interval = int(configuration.get('agent', 'update_interval'))
         self.plugins_dirs = configuration.get('agent', 'plugins_dirs').split(':')
+	self.stdin_path = '/dev/null'
+	self.stdout_path = '/var/log/glimpse-agent.log'
+	self.stderr_path='/var/log/glimpse-agent.log'
+	self.pidfile_path = '/var/run/glimpse-agent.pid'
+	self.pidfile_timeout = 5
         self.done = False
 
     def run(self):
@@ -73,7 +79,18 @@ class AgentThread(Thread):
 
 def start(configuration):
     agent = AgentThread(configuration)
-    agent.start()
+
+    logger = logging.getLogger("DaemonLog")
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler = logging.FileHandler("/var/log/glimpse-agent.log")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    # Daemonizing the application
+    daemon_runner = runner.DaemonRunner(agent)
+    daemon_runner.daemon_context.files_preserve=[handler.stream]
+    daemon_runner.do_action()
 
     while agent.isAlive():
         try:
