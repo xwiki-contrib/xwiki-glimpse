@@ -11,8 +11,8 @@
 <customClass></customClass>
 <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
 <creationDate>1317844754000</creationDate>
-<date>1350390834000</date>
-<contentUpdateDate>1350390834000</contentUpdateDate>
+<date>1350393236000</date>
+<contentUpdateDate>1350393236000</contentUpdateDate>
 <version>1.1</version>
 <title>UpdateAgentData</title>
 <template></template>
@@ -59,12 +59,17 @@ for(agent in agents) {
   agentDocument = xwiki.getDocument(ref)
   
   // Remove the objects created by a previous update. This is needed because otherwise stale properties could be kept (e.g., a plugin that start to send less services/properties information)
-  clearObjects(agentDocument, "GlimpseCode.AgentClass")
   clearObjects(agentDocument, "GlimpseCode.ServiceClass")
   clearObjects(agentDocument, "GlimpseCode.ServicePropertyClass")
 
-  // Create the agent object
+  // Create or retrieve the agent object
   agentObject = getObjectToUpdate(agentDocument, "GlimpseCode.AgentClass", "ip", agent.ip)
+
+  // If the agent has not sent new data wrt the last update, then do nothing.
+  if(agentObject.getProperty("lastUpdateTime") != null &amp;&amp; agentObject.getProperty("lastUpdateTime").getValue().equals(agent.lastUpdateTime)) {
+    println("* Skipping agent **${agent.name} (${agent.ip})** because it has not sent any new data since the last page update.")
+    continue
+  }
 
   agentObject.set("ip", agent.ip)
   agentObject.set("name", agent.name)
@@ -135,6 +140,6 @@ for(agent in agents) {
   updatedAgents++
 }
 
-println "${updatedAgents} agents updated"
+println "\n**${updatedAgents} agents updated**"
 
 {{/groovy}}</content></xwikidoc>
