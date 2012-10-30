@@ -54,47 +54,31 @@ public class AgentsResource implements XWikiRestComponent
     @Produces(MediaType.APPLICATION_JSON)
     public Response get()
     {
-        XWikiContext xwikiContext = Utils.getXWikiContext(componentManager);
+        List<Agent> agents = glimpse.getAgents();
 
-        String database = xwikiContext.getDatabase();
-
-        try {
-            Utils.getXWikiContext(componentManager).setDatabase(xwikiContext.getMainXWiki());
-
-            List<Agent> agents = glimpse.getAgents();
-
-            JsonConfig config = new JsonConfig();
-            config.setJsonPropertyFilter(new PropertyFilter()
+        JsonConfig config = new JsonConfig();
+        config.setJsonPropertyFilter(new PropertyFilter()
+        {
+            public boolean apply(Object source, String name, Object value)
             {
-                public boolean apply(Object source, String name, Object value)
-                {
-                    /* Filter agent and id fields in Service class in order to avoid a cyclic object graph */
-                    if (source.getClass().equals(Service.class) && ("agent".equals(name) || "id".equals(name))) {
-                        return true;
-                    }
-                    return false;
+                /* Filter agent and id fields in Service class in order to avoid a cyclic object graph */
+                if (source.getClass().equals(Service.class) && ("agent".equals(name) || "id".equals(name))) {
+                    return true;
                 }
-            });
+                return false;
+            }
+        });
 
-            JSON json = JSONSerializer.toJSON(agents, config);
+        JSON json = JSONSerializer.toJSON(agents, config);
 
-            return Response.ok(json.toString()).build();
-        } finally {
-            Utils.getXWikiContext(componentManager).setDatabase(database);
-        }
+        return Response.ok(json.toString()).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(String jsonData)
     {
-        XWikiContext xwikiContext = Utils.getXWikiContext(componentManager);
-
-        String database = xwikiContext.getDatabase();
-
         try {
-            Utils.getXWikiContext(componentManager).setDatabase(xwikiContext.getMainXWiki());
-
             Agent agent = GlimpseUtils.readAgentFromJSON(jsonData);
 
             glimpse.storeAgent(agent);
@@ -104,8 +88,6 @@ public class AgentsResource implements XWikiRestComponent
             return Response.status(Status.BAD_REQUEST).build();
         } catch (GlimpseException e) {
             return Response.serverError().build();
-        } finally {
-            Utils.getXWikiContext(componentManager).setDatabase(database);
         }
     }
 

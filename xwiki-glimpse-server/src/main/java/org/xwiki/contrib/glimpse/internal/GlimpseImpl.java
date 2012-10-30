@@ -13,6 +13,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.context.Execution;
 import org.xwiki.contrib.glimpse.Glimpse;
 import org.xwiki.contrib.glimpse.GlimpseException;
+import org.xwiki.contrib.glimpse.Utils;
 import org.xwiki.contrib.glimpse.model.Agent;
 import org.xwiki.contrib.glimpse.model.Service;
 
@@ -29,9 +30,14 @@ public class GlimpseImpl implements Glimpse
     public boolean storeAgent(Agent agent) throws GlimpseException
     {
         XWikiContext xwikiContext = (XWikiContext) execution.getContext().getProperty("xwikicontext");
+
+        String database = xwikiContext.getDatabase();
+
         XWikiHibernateStore hibernateStore = xwikiContext.getWiki().getHibernateStore();
 
         try {
+            xwikiContext.setDatabase(xwikiContext.getMainXWiki());
+
             hibernateStore.beginTransaction(xwikiContext);
             Session session = hibernateStore.getSession(xwikiContext);
             session.saveOrUpdate(agent);
@@ -39,7 +45,11 @@ public class GlimpseImpl implements Glimpse
         } catch (Exception e) {
             throw new GlimpseException(e);
         } finally {
-            hibernateStore.endTransaction(xwikiContext, false);
+            try {
+                hibernateStore.endTransaction(xwikiContext, false);
+            } finally {
+                xwikiContext.setDatabase(database);
+            }
         }
 
         return true;
@@ -50,9 +60,14 @@ public class GlimpseImpl implements Glimpse
         List<Agent> agents = new ArrayList<Agent>();
 
         XWikiContext xwikiContext = (XWikiContext) execution.getContext().getProperty("xwikicontext");
+
+        String database = xwikiContext.getDatabase();
+
         XWikiHibernateStore hibernateStore = xwikiContext.getWiki().getHibernateStore();
 
         try {
+            xwikiContext.setDatabase(xwikiContext.getMainXWiki());
+
             hibernateStore.beginTransaction(xwikiContext);
             Session session = hibernateStore.getSession(xwikiContext);
             Query query = session.createQuery("select agent from Agent as agent");
@@ -70,6 +85,8 @@ public class GlimpseImpl implements Glimpse
             hibernateStore.endTransaction(xwikiContext, false);
         } catch (XWikiException e) {
             hibernateStore.endTransaction(xwikiContext, false);
+        } finally {
+            xwikiContext.setDatabase(database);
         }
 
         return agents;
