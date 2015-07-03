@@ -1,6 +1,8 @@
 Introduction
 ============
 
+[![XWiki labs logo](https://raw.githubusercontent.com/xwiki-labs/xwiki-labs-logo/master/projects/xwikilabs/xwikilabsprototype.png "XWiki labs")](https://labs.xwiki.com/xwiki/bin/view/Projects/XWikiLabsPrototype)
+
 Glimpse is a configuration data collection tool for server infrastructures. Data are sent periodically by agents and stored in XWiki. Agent pages are updated on demand.
 
 Several glimpses can be created: a glimpse gives a partial view on the collected data and allow the user to navigate and find information more efficiently.
