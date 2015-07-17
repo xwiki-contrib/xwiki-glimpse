@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>GlimpseCode</web>
+<name>FlushAgentData</name>
+<language></language>
+<defaultLanguage>en</defaultLanguage>
+<translation>0</translation>
+<parent></parent>
+<creator>XWiki.superadmin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1351517142000</creationDate>
+<date>1351520243000</date>
+<contentUpdateDate>1351520243000</contentUpdateDate>
+<version>25.1</version>
+<title>FlushAgentData</title>
+<template></template>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.1</syntaxId>
+<hidden>false</hidden>
+<content>{{groovy}}
+import com.xpn.xwiki.store.*
+
+if (request.getParameter("confirm") == "1") {
+  def hibStore = services.component.getInstance(XWikiStoreInterface.class, "hibernate")
+  def ctx = xcontext.context
+
+  hibStore.checkHibernate(ctx)
+  def bTransaction = hibStore.beginTransaction(false, ctx)
+  def session = hibStore.getSession(ctx)
+
+  def statement = session.connection().createStatement();
+
+  statement.executeQuery("truncate table glimpse_services_properties;");
+  statement.executeQuery("truncate table glimpse_services;");
+  statement.executeQuery("truncate table glimpse_agents");
+
+  hibStore.endTransaction(ctx, true)
+} else {
+  println("[[Flush Agents Data (Agents pages won't be modified)&gt;&gt;${doc.getFullName()}||queryString='confirm=1']]")
+}
+{{/groovy}}</content></xwikidoc>
